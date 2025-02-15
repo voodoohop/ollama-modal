@@ -136,24 +136,24 @@ async def proxy_chat_completions(request: Request):
                     stream=False
                 )
                 
-                return JSONResponse(
-                    content={
-                        "id": "chatcmpl-" + os.urandom(12).hex(),
-                        "object": "chat.completion",
-                        "created": int(time.time()),
-                        "model": MODEL,
-                        "choices": [
-                            {
-                                "index": 0,
-                                "message": {
-                                    "role": "assistant",
-                                    "content": response["message"]["content"]
-                                },
-                                "finish_reason": "stop"
-                            }
-                        ]
-                    }
-                )
+                completion_response = {
+                    "id": "chatcmpl-" + os.urandom(12).hex(),
+                    "object": "chat.completion",
+                    "created": int(time.time()),
+                    "model": MODEL,
+                    "choices": [
+                        {
+                            "index": 0,
+                            "message": {
+                                "role": "assistant",
+                                "content": response["message"]["content"]
+                            },
+                            "finish_reason": "stop"
+                        }
+                    ]
+                }
+                
+                return completion_response
             except Exception as e:
                 logger.error(f"Error in non-streaming response: {str(e)}")
                 return JSONResponse(
